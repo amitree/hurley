@@ -16,15 +16,16 @@ module Hurley
       end.join(SLASH)
     end
 
-    def self.parse(raw_url)
+    def self.parse(raw_url, request_options=RequestOptions.new)
       case raw_url
       when Url then raw_url
       when nil, EMPTY then Empty.new
-      else new(@@parser.call(raw_url.to_s))
+      else new(@@parser.call(raw_url.to_s), request_options)
       end
     end
 
-    def initialize(parsed)
+    def initialize(parsed, request_options=RequestOptions.new)
+      @query_class = request_options.query_class
       @parsed = parsed
       if u = @parsed.user
         @user = CGI.unescape(u)
@@ -43,8 +44,8 @@ module Hurley
       @parsed.userinfo = nil
     end
 
-    def self.join(absolute, relative)
-      parse(absolute).join(parse(relative))
+    def self.join(absolute, relative, request_options=RequestOptions.new)
+      parse(absolute, request_options).join(parse(relative, request_options))
     end
 
     extend Forwardable

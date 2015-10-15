@@ -110,7 +110,7 @@ module Hurley
     end
 
     def request(method, path)
-      Request.new(method, Url.join(@url, path), @header.dup, nil, @request_options.dup, @ssl_options.dup)
+      Request.new(method, Url.join(@url, path, @request_options.dup), @header.dup, nil, @request_options.dup, @ssl_options.dup)
     end
 
     private
